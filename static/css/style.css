@@ -1,6 +1,17 @@
-h1 {
-    border: 2px #eee solid;
-    color: brown;
-    text-align: center;
-    padding: 10px;
+body {
+    a {
+        font-family: Arial;
+        font-weight: bold;
+    }
+}
+
+nav {
+    background-color: #0DCAF0;
+
+}
+
+.navbar {
+    width: 102% !important;
+    left: -1%;
+    padding: 1%;
 }
