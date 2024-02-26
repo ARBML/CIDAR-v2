@@ -1,13 +1,9 @@
-# 🌴CIDAR
+# 🌴CIDAR v2
 <p align="center">
 <img src="https://cdn-uploads.huggingface.co/production/uploads/655e10b1c38270696b290f20/lKec96otC8VdM09SnPKL8.png" width = "150px"/>
 </p>
 
-CIDAR: Culturally-Relevant Instruction Dataset For Arabic. CIDAR contains 10,000 instructions and their outputs. The dataset was created by selecting around 9.2k samples from [Alpagasus](https://huggingface.co/datasets/mlabonne/alpagasus) dataset then translating it using ChatGPT. In addition, we append that with around 800 instructions from the webiste [Ask the teacher](https://learning.aljazeera.net/ar/asktheteacher). All the 10,000 samples are reviewed by around 10 reviewers. 
-
-<p align="center">
-<img src="./imgs/CIDAR Data Collection System Diagram.png" width = "1200px"/>
-</p>
+CIDAR-v2: Culturally-Relevant Instruction Dataset For Arabic v2. We need to fix the issues of the previous version and also add more samples. 
 
 ## 📝 CIDAR Annotation
 
@@ -19,26 +15,12 @@ Our data annotation paltform was built on top of flask library. You can follow t
 
 ### ✨ Demo
 
-The annotation app contains two sections: `English` and `Arabic`. Reviewers can make changes on `Instruction`, `Input`, and `Output` to fix mistakes and align data with Arabic culture.
+ Reviewers can make changes on `Instruction` and `Output` to add new samples or review the previous samples from CIDAR. 
 
 `instruction(str)`: required instruction. Each of the 10K instructions is reviewd by a contributer.
 
-`input(str)`: (Optional) input for the instruction. For example, when the instruction is find the mistake in the next sentence, the input is the sentence.
-
 `output(str)`: response for the instruction given.
 
- Also, reviewers are able to track their contribution record and how much data are remaining.
-<p align="center">
-<img src="imgs/annot-ss.png" width="700"/>
-</p>
-
-## 📁 Loading The Dataset
-You can download the dataset from [HuggingFace - CIDAR](https://huggingface.co/datasets/arbml/CIDAR). 
-
-```python
-from datasets import load_dataset
-cidar = load_dataset('arbml/CIDAR')
-```
 
 ## 📄 Sample From The Dataset:
 This sample shows an Arabic-specific intruction which related to `البلاغة` and `الإعراب`. The sentence is orignally in Arabic - not translated from any other lanaguage - 
