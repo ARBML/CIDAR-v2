@@ -43,7 +43,7 @@ an extra space in the `output`
 }
 ```
 
-## Fix Previous Annotations `\explore`
+## Explore Previous Annotations `\explore`
 
 Take inspirations from previous examples.
 
