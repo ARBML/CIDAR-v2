@@ -41,18 +41,6 @@ This sample shows an Arabic-specific intruction which related to `البلاغة
            'وفي الحالتين فجملة "سيارة آراؤه" جملة اسمية في محل رفع نعت '
            'لـ"أديب".'
 
-## 📉 Statistics
+## 🧩 Guidlines
 
-...
-
-## ⛔️ Limitations and Future Work
-
-...
-
-## 🧩 Contributers
-
-...
-
-## 🔑 License
-
-...
+Take a look at the [Guidlines](Guidlines.md).
