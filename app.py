@@ -142,7 +142,6 @@ def send_data():
     rem_indices = set(all_indices) - finished_indices
     index = random.choice(list(rem_indices))
     element = [ex for ex in dataset['train'] if index == int(ex['index'])][0]
-    element['num_rem'] = len(rem_indices)
     return jsonify(element)
 
 @app.route('/api/getConNames')
@@ -171,7 +170,6 @@ def send_empty_data():
     element = {
             "instruction":'',
             "output" :'',
-            "num_rem":0,
             "index":get_max_idx() + 1
         }
     return jsonify(element)
@@ -181,7 +179,6 @@ def send_saved_data():
     element = {
             "instruction":'',
             "output" :'',
-            "num_rem":0,
             "index":-1
         }
     with open('static/data/dataset.json') as f:
@@ -190,7 +187,6 @@ def send_saved_data():
         saved_indices = list(range(len(data)))
         index = random.choice(saved_indices)
         element = data[index]
-        element['num_rem'] = len(saved_indices)
     return jsonify(element)
 
 @scheduler.task('interval', id='do_push_hf', hours=1)
@@ -202,7 +198,7 @@ def push_hub():
     
     if len(data):
         dataset = load_dataset("json", data_files="static/data/dataset.json",  download_mode = "force_redownload")
-        dataset.push_to_hub('arbml/cidar-v2')
+        dataset.push_to_hub('arbml/cidarv2')
 
 def init_dataset():
     global rem_indices, dataset, all_indices

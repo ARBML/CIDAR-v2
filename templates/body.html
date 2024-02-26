@@ -34,11 +34,6 @@
             <span class="badge text-dark bg-light" id="index"></span>
 
         </div>
-
-        <div class="col-sm-3">
-            <span class="badge text-dark bg-light text-right" id="num_rem"></span>
-        </div>
-
         <div class="col-sm-3">
             <span class="badge text-dark bg-light text-right" id="num_cont">Total Contributions: </span>
         </div>
@@ -47,10 +42,10 @@
         <div class="row bg-info text-dark p-3 mb-2 ">
             <h3>Arabic</h3>
             <label for="instruction">Instruction</label>
-            <input type="text" dir="rtl" class="form-control edittable" id="instruction" name="instruction">
+            <input type="text" dir="rtl" class="form-control edittable" id="instruction" name="instruction" required>
             <label for="output">Output</label>
-            <textarea type="text" dir="rtl" class="form-control edittable" id="output" name="output"
-                rows="10"> </textarea>
+            <textarea type="text" dir="rtl" class="form-control edittable" id="output" name="output" rows="10"
+                required> </textarea>
             <input type="text" class="form-control input-sm changed" id="Reviewed by" name="Reviewed by"
                 placeholder="Enter your name here" required>
         </div>
@@ -61,7 +56,8 @@
                 <button type="submit" class="btn btn-info" id="btnSubmit">
                     Submit
                 </button>
-                <button type="button" class="btn btn-outline-secondary" onclick="setEmpty()">Clear</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="setEmpty()"
+                    id="btnClear">Clear</button>
 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"

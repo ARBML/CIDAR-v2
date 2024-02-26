@@ -97,10 +97,6 @@ function getNext() {
   element = getNextElment()
   document.getElementById('instruction').value = element['instruction'];
   document.getElementById('output').value = element['output'];
-  if (is_explore_page)
-    document.getElementById('num_rem').innerHTML = 'Total: ' + element['num_rem'];
-  else
-    document.getElementById('num_rem').innerHTML = 'Remaining: ' + element['num_rem'];
   document.getElementById('index_input').value = element['index'];
   document.getElementById('index').innerHTML = 'index: ' + element['index'];
   document.getElementById('Reviewed by').value = curr_reviewer
@@ -130,8 +126,6 @@ function checkChanges() {
 function submitForm() {
   document.getElementById('theForm').submit();
   num_cont += 1
-  document.getElementById('num_rem').innerHTML = 'Number of Contributions: ' + num_cont;
-
 }
 
 $(document).on('submit', '#theForm', function (e) {
@@ -159,6 +153,9 @@ is_main_page = window.location.pathname == '/'
 if (is_explore_page) {
   $('#btnSubmit').hide();
   $('#btnClear').hide();
+  $('#num_cont').hide();
+} else if (is_main_page) {
+  $('#btnSkip').hide();
 }
 getNext();
 
