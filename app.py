@@ -116,7 +116,7 @@ def load_data():
 def save_json(entry):
     data = []
     if os.path.exists('static/data/dataset.json'):
-        with open('static/data/dataset.json') as f:
+        with open('static/data/dataset.json', encoding="utf-8") as f:
             data = json.load(f)
     
     new_entry = {}
@@ -125,7 +125,7 @@ def save_json(entry):
             new_entry[key] = entry[key]
     data.append(new_entry)
 
-    with open('static/data/dataset.json', 'w') as f:
+    with open('static/data/dataset.json', 'w', encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii = False, indent=2)
 
 @app.route('/api/submit',methods = ['POST', 'GET'])
@@ -146,7 +146,7 @@ def send_data():
 
 @app.route('/api/getConNames')
 def get_cont_names():
-    with open('static/data/dataset.json') as f:
+    with open('static/data/dataset.json', encoding="utf-8") as f:
         data = json.load(f)
     return jsonify(Counter([elm['Reviewed by'].strip().split(' ')[0].strip() for elm in data]))
 
@@ -154,14 +154,14 @@ def get_cont_names():
 def get_cont():
     print(request.form)
     name = request.form['Reviewed by']
-    with open('static/data/dataset.json') as f:
+    with open('static/data/dataset.json', encoding="utf-8" ) as f:
         data = json.load(f)
     return jsonify({
         "num_cont":len([elm for elm in data if elm['Reviewed by'] == name])
     })
 
 def get_max_idx():
-    with open('static/data/dataset.json') as f:
+    with open('static/data/dataset.json', encoding="utf-8") as f:
         data = json.load(f)
     return max([int(ex['index']) for ex in data])
 
@@ -181,7 +181,7 @@ def send_saved_data():
             "output" :'',
             "index":-1
         }
-    with open('static/data/dataset.json') as f:
+    with open('static/data/dataset.json', encoding="utf-8") as f:
         data = json.load(f)
     if len(data):
         saved_indices = list(range(len(data)))
@@ -193,7 +193,7 @@ def send_saved_data():
 def push_hub():
     TOKEN = os.environ.get('HF_TOKEN')
     subprocess.run(["huggingface-cli", "login", "--token", TOKEN])
-    with open('static/data/dataset.json') as f:
+    with open('static/data/dataset.json', encoding="utf-8") as f:
         data = json.load(f)
     
     if len(data):
@@ -218,7 +218,7 @@ def init_dataset():
     except:
         data = []
 
-    with open('static/data/dataset.json', 'w') as f:
+    with open('static/data/dataset.json', 'w', encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii = False, indent=2)
     
 @app.route('/explore')
