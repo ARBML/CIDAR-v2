@@ -97,8 +97,8 @@ function getNext() {
   element = getNextElment()
   document.getElementById('instruction').value = element['instruction'];
   document.getElementById('output').value = element['output'];
-  document.getElementById('index_input').value = element['index'];
-  document.getElementById('index').innerHTML = 'index: ' + element['index'];
+  document.getElementById('id_input').value = element['id'];
+  document.getElementById('id').innerHTML = 'id: ' + element['id'];
   document.getElementById('Reviewed by').value = curr_reviewer
   console.log("Current Reviewer", curr_reviewer)
 

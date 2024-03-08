@@ -7,6 +7,7 @@ import os
 import subprocess
 import sys
 from collections import Counter
+from data_pool import Datasets
 try:
     from datasets import load_dataset
 except ImportError:
@@ -47,10 +48,9 @@ poem_related_words =[
     'قصيده'
 ]
 
-rem_indices = []
-all_indices = []
 curr_idx = 10_001
-dataset = load_dataset('arbml/cidar', verification_mode='no_checks')
+
+dataset = Datasets().get_data()
 
 # set configuration values
 class Config:
@@ -66,8 +66,6 @@ class Config:
 
 scheduler.init_app(app)
 
-def get_finished_indices():
-    return set()
 
 def load_data():
     alpaca_arabic = load_dataset('arbml/alpagasus_cleaned_concatenated_ar')
@@ -121,28 +119,30 @@ def save_json(entry):
     
     new_entry = {}
     for key in entry:
-        if key in ['instruction', 'output', 'index', 'version', 'Reviewed by']:
+        if key in ['instruction', 'output', 'id', 'Reviewed by']:
             new_entry[key] = entry[key]
     data.append(new_entry)
 
     with open('static/data/dataset.json', 'w', encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii = False, indent=2)
 
+def get_next_id():
+    with open('static/data/dataset.json', encoding="utf-8") as f:
+            data = json.load(f)
+    return max([-1]+[int(ex['id'].split('-')[-1]) for ex in data if 'cidar-v2' in ex['id']])
+
 @app.route('/api/submit',methods = ['POST', 'GET'])
 def submit():
     if request.method == 'POST':
         element = {k:request.form[k] for k in request.form}
-        element['version'] = 'v2'
+        if element['id'] == 'cidar-v2-empty':
+            element['id'] = f'cidar-v2-{get_next_id() + 1}'
         save_json(element)
     return render_template('index.html')
    
 @app.route('/api/data')
 def send_data():
-    finished_indices = get_finished_indices()
-    rem_indices = set(all_indices) - finished_indices
-    index = random.choice(list(rem_indices))
-    element = [ex for ex in dataset['train'] if index == int(ex['index'])][0]
-    return jsonify(element)
+    return jsonify(random.choice(dataset))
 
 @app.route('/api/getConNames')
 def get_cont_names():
@@ -170,7 +170,7 @@ def send_empty_data():
     element = {
             "instruction":'',
             "output" :'',
-            "index":get_max_idx() + 1
+            "id":'cidar-v2-empty'
         }
     return jsonify(element)
 
@@ -179,7 +179,7 @@ def send_saved_data():
     element = {
             "instruction":'',
             "output" :'',
-            "index":-1
+            "id":-1
         }
     with open('static/data/dataset.json', encoding="utf-8") as f:
         data = json.load(f)
@@ -201,22 +201,12 @@ def push_hub():
         dataset.push_to_hub('arbml/cidarv2')
 
 def init_dataset():
-    global rem_indices, dataset, all_indices
+    global dataset
     os.makedirs('static/data', exist_ok=True)
-    try:
-        data = []
-        for i, ex in enumerate(dataset['train']):
-            ex['Reviewed by'] = ''
-            ex['version'] = 'v1'
-            all_indices.append(int(ex['index']))
-            for word in usa_related_words:
-                if word in ex['instruction'] + ex['output']:
-                    rem_indices.append(int(ex['index']))
-                    break
-            else:
-                data.append(ex)
-    except:
-        data = []
+    data = []
+    for i, ex in enumerate(dataset):
+        ex['Reviewed by'] = ''
+        data.append(ex)
 
     with open('static/data/dataset.json', 'w', encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii = False, indent=2)
