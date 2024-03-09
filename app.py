@@ -15,41 +15,6 @@ except ImportError:
 finally:
     from datasets import load_dataset
 
-prob_mt_ar = {
-    'وصف':'صف',
-    'تحديد':'حدد',
-    'خلاصة':'لخص',
-    'شرح':'اشرح',
-    'اسم': 'سم'
-}
-prob_mt_en = {
-    'وصف': 'describe',
-    'تحديد': 'determine',
-    'خلاصة':'summarize',
-    'شرح':'explain',
-    'اسم': 'name'
-}
-
-usa_related_words = [
-    'الولايات المتحدة',
-    'أمريكا',
-    'نيويورك',
-    'واشنكن',
-    'لوس أنجلوس',
-    'سان فرانسيسكو',
-    'الهند',
-    'الصين',
-    'اليابان'
-]
-
-poem_related_words =[
-    'قصيدة',
-    'هايكو',
-    'قصيده'
-]
-
-curr_idx = 10_001
-
 dataset = Datasets().get_data()
 
 # set configuration values
@@ -66,51 +31,6 @@ class Config:
 
 scheduler.init_app(app)
 
-
-def load_data():
-    alpaca_arabic = load_dataset('arbml/alpagasus_cleaned_concatenated_ar')
-    # new_column = list(range(len(alpaca_arabic['train'])))
-    # alpaca_arabic['train'] = alpaca_arabic['train'].add_column("index", new_column)
-
-    def filter_dataset(example):
-        alphabets = 'abcdefghijklmnopqrstuvwxyz'
-        inp = (example['instruction']+example['input']).strip() if 'input' in example else example['instruction'].strip()
-        out = example['output']
-        
-        inp_en = example['instruction_en']+example['input_en'] if 'input_en' in example else example['instruction_en']
-        # English insturctions
-        # for alph in alphabets:
-        #     if alph in inp+out:
-        #         return True
-        
-        # empty insturctions
-        # if inp.strip() == "" or out.strip() == "":
-        #     return True
-        
-        # insturctions containing foreigh stuff
-        for word in usa_related_words + poem_related_words:
-            if word in inp:
-                return True
-        
-        #instructions including certain words
-        # for key in prob_mt_ar:
-        #     if key in inp.split(' ')[0] and prob_mt_en[key] in inp_en.lower():
-        #         return True
-        # return False
-
-    english_data = alpaca_arabic.filter(filter_dataset)
-    # include random indices 
-    extra_indices = []
-    # random insturctions
-    # extra_indices = [random.randint(0, len(alpaca_arabic['train'])-1) for _ in range(1000)]
-
-    # all instructions 
-    extra_indices = [i for i in range(len(alpaca_arabic['train']))]
-
-    all_indices = set([sample['index'] for sample in english_data['train']] + extra_indices)
-
-    return all_indices, alpaca_arabic
-
 def save_json(entry):
     data = []
     if os.path.exists('static/data/dataset.json'):
@@ -119,7 +39,7 @@ def save_json(entry):
     
     new_entry = {}
     for key in entry:
-        if key in ['instruction', 'output', 'id', 'Reviewed by']:
+        if key in ['instruction', 'output', 'id', 'reviewer']:
             new_entry[key] = entry[key]
     data.append(new_entry)
 
@@ -148,16 +68,16 @@ def send_data():
 def get_cont_names():
     with open('static/data/dataset.json', encoding="utf-8") as f:
         data = json.load(f)
-    return jsonify(Counter([elm['Reviewed by'].strip().split(' ')[0].strip() for elm in data]))
+    return jsonify(Counter([elm['reviewer'].strip().split(' ')[0].strip() for elm in data]))
 
 @app.route('/api/getCon', methods = ['POST', 'GET'])
 def get_cont():
     print(request.form)
-    name = request.form['Reviewed by']
+    name = request.form['reviewer']
     with open('static/data/dataset.json', encoding="utf-8" ) as f:
         data = json.load(f)
     return jsonify({
-        "num_cont":len([elm for elm in data if elm['Reviewed by'] == name])
+        "num_cont":len([elm for elm in data if elm['reviewer'] == name])
     })
 
 def get_max_idx():
@@ -183,6 +103,7 @@ def send_saved_data():
         }
     with open('static/data/dataset.json', encoding="utf-8") as f:
         data = json.load(f)
+    
     if len(data):
         saved_indices = list(range(len(data)))
         index = random.choice(saved_indices)
@@ -201,13 +122,15 @@ def push_hub():
         dataset.push_to_hub('arbml/cidarv2')
 
 def init_dataset():
-    global dataset
     os.makedirs('static/data', exist_ok=True)
-    data = []
-    for i, ex in enumerate(dataset):
-        ex['Reviewed by'] = ''
-        data.append(ex)
-
+    saved_data = None
+    try:
+        data = []
+        for i, ex in enumerate(load_dataset('arbml/cidarv2')):
+            data.append(ex)
+    except:
+        data = []
+    
     with open('static/data/dataset.json', 'w', encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii = False, indent=2)
     

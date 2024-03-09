@@ -19,10 +19,10 @@ function getContributionsBy(name) {
   $.ajax({
     type: 'POST',
     url: "/api/getCon",
-    data: { 'Reviewed by': name }, //How can I preview this?
+    data: { 'reviewer': name }, //How can I preview this?
     dataType: 'json',
     success: function (d) {
-      document.getElementById('num_cont').innerHTML = 'Number of Contributions: ' + d.num_cont;
+      document.getElementById('numCont').innerHTML = 'Number of Contributions: ' + d.num_cont;
     }
   });
 }
@@ -99,7 +99,7 @@ function getNext() {
   document.getElementById('output').value = element['output'];
   document.getElementById('id_input').value = element['id'];
   document.getElementById('id').innerHTML = 'id: ' + element['id'];
-  document.getElementById('Reviewed by').value = curr_reviewer
+  document.getElementById('reviewer').value = curr_reviewer
   console.log("Current Reviewer", curr_reviewer)
 
   if (is_explore_page) {
@@ -153,7 +153,8 @@ is_main_page = window.location.pathname == '/'
 if (is_explore_page) {
   $('#btnSubmit').hide();
   $('#btnClear').hide();
-  $('#num_cont').hide();
+  $('#numCont').hide();
+  $('#reviewer').hide();
 } else if (is_main_page) {
   $('#btnSkip').hide();
 }
