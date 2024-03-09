@@ -80,6 +80,25 @@ def get_cont():
         "num_cont":len([elm for elm in data if elm['reviewer'] == name])
     })
 
+
+@app.route('/api/getById', methods = ['POST', 'GET'])
+def get_by_id():
+    id = request.form['id']
+    with open('static/data/dataset.json', encoding="utf-8") as f:
+        data = json.load(f)
+    
+    element = [ex for ex in data if ex['id'] == id]
+    print(element)
+    if len(element):
+        element = element[0]
+    else:
+        element = {
+            "instruction":'',
+            "output" :'',
+            "id":-1
+        }
+    return jsonify(element)
+
 def get_max_idx():
     with open('static/data/dataset.json', encoding="utf-8") as f:
         data = json.load(f)
@@ -145,6 +164,8 @@ def review():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+    
 
 init_dataset()
 scheduler.start()

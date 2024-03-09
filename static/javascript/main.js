@@ -97,8 +97,8 @@ function getNext() {
   element = getNextElment()
   document.getElementById('instruction').value = element['instruction'];
   document.getElementById('output').value = element['output'];
+  document.getElementById('id').value = element['id'];
   document.getElementById('id_input').value = element['id'];
-  document.getElementById('id').innerHTML = 'id: ' + element['id'];
   document.getElementById('reviewer').value = curr_reviewer
   console.log("Current Reviewer", curr_reviewer)
 
@@ -106,6 +106,22 @@ function getNext() {
     setUpBarGraph();
   }
 }
+
+$('#id').change(function (){
+  id = document.getElementById('id').value
+  $.ajax({
+    type: 'POST',
+    url: "/api/getById",
+    data: { 'id': id }, 
+    dataType: 'json',
+    success: function (element) {
+      document.getElementById('instruction').value = element['instruction'];
+      document.getElementById('output').value = element['output'];
+      document.getElementById('id').value = element['id'];
+      document.getElementById('id_input').value = element['id'];
+    }
+  });
+})
 
 $(".edittable").on('change', function () {
   changed = true
@@ -130,6 +146,7 @@ function submitForm() {
 
 $(document).on('submit', '#theForm', function (e) {
   e.preventDefault();
+
   $.ajax({
     type: 'POST',
     url: '/api/submit',
@@ -137,7 +154,6 @@ $(document).on('submit', '#theForm', function (e) {
     success: function () {
       getNext();
       getContributionsBy(curr_reviewer)
-
     }
   })
 });
@@ -155,6 +171,7 @@ if (is_explore_page) {
   $('#btnClear').hide();
   $('#numCont').hide();
   $('#reviewer').hide();
+  $("#id").removeAttr('readonly');
 } else if (is_main_page) {
   $('#btnSkip').hide();
 }
