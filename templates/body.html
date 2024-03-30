@@ -1,6 +1,7 @@
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="nav-cidar navbar-brand" href="/"> <img class="cidar2-log" src="../static/CIDAR2.png" alt="cidar2 logo" width="100">
+        <a class="nav-cidar navbar-brand" href="/"> <img class="cidar2-log" src="../static/CIDAR2.png" alt="cidar2 logo"
+                width="100">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,42 +21,43 @@
 
     <div class="row p-3 mb-2">
         <p class="p-intro">
-            CIDAR2 is an extension of <a href="https://huggingface.co/datasets/arbml/CIDAR" target="_blank">CIDAR</a>
-            aimed at extending
-            the dataset with
-            much more samples. Please take a look at the <a
-                href="https://github.com/ARBML/CIDAR-v2/blob/master/Guidlines.md" target="_blank">Guidlines</a>.
+            CIDAR2 is the next version of <a href="https://huggingface.co/datasets/arbml/CIDAR"
+                target="_blank">CIDAR</a>
+            and it is aimed at creating a dataset with a commercial license.
         </p>
         <div class="part1 col-sm-12">
             <ol class="list-group list-group-numbered">
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold">Fix Grammatical Issues</div>
-                        Some words might not be translated correctly especially at the start, we want all the
-                        statements to start by a question
-                        For example تحديد should be replaced by حدد or قم بتحديد
+                        We are interested to fix some grammatical issues that might exist in a given Instruction, Output
+                        pair.
+                        For example,
                     </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
-                        <div class="fw-bold">Fix Translation Issues</div>
-                        Some inputs or outputs might not be translted. Also, some instructions might be specific
-                        to English please give their corropsonding examples in Arabic.
+                        <div class="fw-bold">Long Respones Only</div>
+                        We are interested in detailed answers with proper context. For example, a
+                        short reponse like <span class="badge rounded-pill bg-light text-dark">عاصمة السعودية هي الرياض
+                        </span>is not preferred as it does not give a proper context in a chat mode. For more
+                        information, take a look
+                        at the <a href="https://github.com/ARBML/CIDAR-v2/blob/master/Guidlines.md"
+                            target="_blank">Guidlines</a>.
+
                     </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold">Adapt Cultural Content</div>
-                        Some examples in the original English Alpaca might contain some examples that represent the
-                        western cultures. We want to replace them with insturctions that represent the Arabic region and
-                        its
-                        culture.
+                        Some examples might contain instruction and output pairs that are biased to the Western culture
+                        . We want to replace them with insturctions that represent the Arabic region an its culture.
                 </li>
         </div>
         <div class="row">
             <div class="col-sm-6">
                 <span class="badge text-dark bg-light">id</span>
-                <input type="text" id = 'id' readonly>
+                <input type="text" id='id' readonly>
 
             </div>
             <div class="col-sm-3">
